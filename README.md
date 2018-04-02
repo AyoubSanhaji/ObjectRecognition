@@ -1,2 +1,2 @@
 # ObjectRecognition
-We can find the type of the object just from its image.
+Finding the type of the object just from its image.
