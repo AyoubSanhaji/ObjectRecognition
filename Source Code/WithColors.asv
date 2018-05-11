@@ -1,0 +1,63 @@
+clc;
+clear all;
+close all;
+
+tic
+
+%% Declaration
+nb_classe = 4;
+nb_image = 25;
+chemin = '\';
+nb_ima = nb_classe*nb_image;
+nb_img_train = nb_ima/5;
+ima_label = 0;
+
+% Matrice de confusion
+mat_conf = zeros(100,3);
+taux = 0;
+
+
+%% Test
+for i_train = 1 : nb_ima
+    if ( ((1<=i_train)&&(i_train<=100)))
+        
+        % Incrementaion du label a chaque iteration
+        ima_label = ima_label+1;
+       
+        % Enreg du numero de la classe ds un tableau
+        num_classe(ima_label) = floor((i_train-1)/nb_image)+1;
+        
+        % Construction de la matrice de confusion 
+        % (1 colonne: Classe réelle)
+        mat_conf(i_train,1) = num_classe(ima_label);
+        
+        % Concatenation des chaines de caracteres pour le chemin d'acces
+        if (i_train/10 < 1)
+            fichier_train = [chemin '00' int2str(i_train) '.png'];
+        else
+            if (i_train/100 < 1)
+                fichier_train = [chemin '0' int2str(i_train) '.png'];
+            else
+                fichier_train = [chemin '' int2str(i_train) '.png'];
+            end
+        end
+        
+        % Construction de la matrice de confusion
+        % (2 colonne: num de l'image)
+        mat_conf(i_train,2) = i_train;
+        
+        % Ouverture de l'image requete
+        Ima_test = imread(fichier_train);
+        
+        % Construction de la matrice de confusion
+        % (3 colonne: Classe estimée)
+        mat_conf(i_train,3) = corr_max(Ima_test);
+        
+        % Calcul du taux de classification
+        if mat_conf(i_train,3) == mat_conf(i_train,1)
+            taux = taux+1;
+        end
+    end 
+end
+
+toc
